@@ -1,0 +1,86 @@
+defectdojo:
+  version: AppSecPipeline 0.5.0
+  name: DefectDojo
+  tags:
+    - "Vulnerability Management"
+    - "Report Consumer"
+  type: "collector"
+  description: "DefectDojo is a security program and vulnerability management tool. DefectDojo allows you to manage your application security program, maintain product and application information, schedule scans, triage vulnerabilities and push findings into defect trackers. Consolidate your findings into one source of truth with DefectDojo."
+  docker: "appsecpipeline/base-tools:1.8.5"
+  url: https://github.com/OWASP/django-DefectDojo
+  documentation: http://defectdojo.readthedocs.io/en/latest/
+  parameters:
+    DOJO_ENGAGEMENT_ID:
+      type: runtime
+      data_type: int
+      description: "Engagement id that exists in DefectDojo."
+    DOJO_DIR:
+      type: runtime
+      data_type: string
+      description: "Directory where the report reside in for importing into DefectDojo."
+    BUILD_ID:
+      type: runtime
+      data_type: string
+      description: "Build ID from upstream CI/CD."
+    MASTER_CONFIG:
+      type: runtime
+      data_type: string
+      description: "Optional yaml configuration for DefectDojo."
+    PROFILE:
+      type: runtime
+      data_type: string
+      description: "Profile that is run for a Pipeline, defined in master config."
+    GIT_URL:
+      type: runtime
+      data_type: string
+      description: "Git URL."
+    GIT_TAGS:
+      type: runtime
+      data_type: string
+      description: "Tag or branch of SCM."
+    DOJO_SLACK_WEB_HOOK:
+      type: config
+      data_type: key
+      description: "Slack Dojo API key."
+    DOJO_SLACK_CHANNEL:
+      type: config
+      data_type: key
+      description: "Slack Dojo channel"
+    DOJO_SLACK_USER:
+      type: config
+      data_type: string
+      description: "Slack Dojo user"
+    DOJO_SLACK_ICON:
+      type: config
+      data_type: string
+      description: "Slack Dojo icon"
+    DOJO_API_KEY:
+      type: config
+      data_type: key
+      description: "Dojo API key."
+    DOJO_HOST:
+      type: config
+      data_type: string
+      description: "DefectDojo host."
+    DOJO_PRODUCT_ID:
+      type: runtime
+      data_type: int
+      description: "DefectDojo product id."
+    DOJO_PROXY:
+      type: config
+      data_type: url
+      description: "Optional proxy for connecting to DefectDojo."
+  commands:
+    pre:
+    exec: "python /usr/bin/appsecpipeline/tools/defectdojo/dojo_ci_cd.py --dir=$DOJO_DIR --api_key=$DOJO_API_KEY --host=$DOJO_HOST --product=$DOJO_PRODUCT_ID"
+    shell: False
+    post:
+    report:
+    reportname:
+    junit:
+  profiles:
+    all: "--build_id=$BUILD_ID --tag=$GIT_TAGS --slack_web_hook=$DOJO_SLACK_WEB_HOOK --slack_channel=$DOJO_SLACK_CHANNEL --slack_user=$DOJO_SLACK_USER --slack_icon=$DOJO_SLACK_ICON --master_config=$MASTER_CONFIG --profile=$PROFILE --repo_url=$GIT_URL --engagement=$DOJO_ENGAGEMENT_ID --closeengagement"
+    close_engagement: "--engagement=$DOJO_ENGAGEMENT_ID --closeengagement"
+    engagement: "--engagement=$DOJO_ENGAGEMENT_ID"
+    auto_engagement: "--closeengagement"
+    all_proxy: "--proxy=$DOJO_PROXY --build_id=$BUILD_ID"

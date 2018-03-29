@@ -1,0 +1,27 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-defectdojo:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install python pip
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    python-pip
+
+RUN pip install -U junit_xml_output \
+    && pip install -U pyyaml \
+    && pip install -U defectdojo_api
+
+COPY tools/defectdojo/defectdojo.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/defectdojo.bash
+
+COPY tools/defectdojo/dojo_ci_cd.py /usr/bin/
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["defectdojo.bash"]

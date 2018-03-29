@@ -1,0 +1,21 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-git:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install git
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    git
+
+COPY tools/git/git.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/git.bash 
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["git.bash"]
