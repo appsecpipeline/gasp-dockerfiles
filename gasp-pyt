@@ -1,0 +1,31 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-pyt:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install bandit
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    python3 git \
+    python3-setuptools \
+    python
+
+## Install pyt
+
+RUN git clone https://github.com/python-security/pyt.git /tmp/pyt-clone \
+    && cd /tmp/pyt-clone/ \
+    && python3 setup.py install \
+    && cd ~ \
+    && rm -rf /tmp/pyt-clone
+
+#COPY tools/pyt/pyt.bash /usr/bin/
+
+#RUN chmod 775 /usr/bin/pyt.bash
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["bandit.bash"]

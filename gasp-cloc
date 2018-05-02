@@ -1,0 +1,31 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-cloc:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install dependencies
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    wget \
+    perl-modules
+
+## Install Cloc
+ARG CLOCVER=1.74
+
+RUN mkdir /tmp/cloc && \
+    wget -qO- https://github.com/AlDanial/cloc/releases/download/${CLOCVER}/cloc-${CLOCVER}.tar.gz | tar xvz -C /tmp/cloc --strip-components=1 && \
+    cp /tmp/cloc/cloc /usr/bin/ && \
+    rm -R /tmp/cloc && \
+    chmod 775 /usr/bin/cloc 
+
+COPY tools/cloc/cloc.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/cloc.bash
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["cloc.bash"]

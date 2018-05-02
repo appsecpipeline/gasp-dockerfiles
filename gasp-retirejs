@@ -9,15 +9,18 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y \
-    python-pip
+    curl
 
-RUN pip install -U bandit
+## Install retirejs
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+    && apt install -y nodejs \
+    && npm install -g retire
 
-COPY tools/bandit/bandit.bash /usr/bin/
+COPY tools/retirejs/retirejs.bash /usr/bin/
 
-RUN chmod 775 /usr/bin/bandit.bash
+RUN chmod 775 /usr/bin/retirejs.bash
 
 ########## Change to appsecpipeline user ##########
 USER appsecpipeline
 
-ENTRYPOINT ["bandit.bash"]
+ENTRYPOINT ["retirejs.bash"]

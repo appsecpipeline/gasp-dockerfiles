@@ -19,7 +19,7 @@ ssllabs:
     pre:
     exec: "ssllabs-scan"
     shell: True
-    report: "> {reportname}"
+    report: "> /opt/appsecpipeline/reports/ssllabs/{reportname}"
     reportname: "{timestamp}.json"
     post:
     junit:

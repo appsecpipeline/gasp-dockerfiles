@@ -1,0 +1,30 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-spotbugs:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install bandit
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    default-jre-headless \
+    wget
+
+## Install Spotbugs
+
+ARG SPOTBUGSVER=3.1.3
+
+RUN mkdir /opt/spotbugs \
+    && wget -qO- http://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/${SPOTBUGSVER}/spotbugs-${SPOTBUGSVER}.tgz | tar xvz -C /opt/spotbugs --strip-components=1 \
+    && echo "export SPOTBUGS_HOME=/opt/spotbugs" > /etc/profile.d/spotbugs.sh
+
+COPY tools/spotbugs/spotbugs.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/spotbugs.bash
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["spotbugs.bash"]

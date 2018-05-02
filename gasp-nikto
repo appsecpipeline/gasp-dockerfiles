@@ -1,23 +1,21 @@
 FROM mtesauro/gasp-base:1.0.0 
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-bandit:1.0.0
+# ASPTAG = mtesauro/gasp-nikto:1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
-## Update OS and install bandit
+## Update OS and install nikto
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y \
-    python-pip
+    nikto
 
-RUN pip install -U bandit
+COPY tools/nikto/nikto.bash /usr/bin/
 
-COPY tools/bandit/bandit.bash /usr/bin/
-
-RUN chmod 775 /usr/bin/bandit.bash
+RUN chmod 775 /usr/bin/nikto.bash
 
 ########## Change to appsecpipeline user ##########
 USER appsecpipeline
 
-ENTRYPOINT ["bandit.bash"]
+ENTRYPOINT ["nikto.bash"]

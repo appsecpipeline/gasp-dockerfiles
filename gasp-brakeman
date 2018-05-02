@@ -9,15 +9,19 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y \
-    python-pip
+    rubygems
 
-RUN pip install -U bandit
+## Install Brakeman
+ENV BRAKEMAN_VERSION=4.2.1
+RUN gem install brakeman:${BRAKEMAN_VERSION} --no-format-exec 
 
-COPY tools/bandit/bandit.bash /usr/bin/
+# gem install bundler
 
-RUN chmod 775 /usr/bin/bandit.bash
+COPY tools/brakeman/brakeman.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/brakeman.bash
 
 ########## Change to appsecpipeline user ##########
 USER appsecpipeline
 
-ENTRYPOINT ["bandit.bash"]
+ENTRYPOINT ["brakeman.bash"]

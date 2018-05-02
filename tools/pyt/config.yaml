@@ -1,0 +1,31 @@
+pyt:
+  version: AppSecPipeline 0.5.0
+  tool-version:
+  name: pyt
+  tags:
+    - "Static Code Analyzer"
+  type: "static"
+  description: "A Static Analysis Tool for Detecting Security Vulnerabilities in Python Web Applications based on theoretical foundations (Control flow graphs, fixed point, dataflow analysis)"
+  docker: "mtesauro/gasp-pyt:1.0.0"
+  url: https://github.com/python-security/pyt
+  documentation: https://github.com/python-security/pyt
+  parameters:
+    LOC:
+      type: runtime
+      data_type: string
+      description: "Location of the source code."
+  commands:
+    pre:
+    exec: ""
+    shell: True
+    report: ""
+    reportname: ""
+    post:
+    junit:
+  languages:
+    - "python"
+  profiles:
+    #Runs the full pyt scan
+    all: "-r $LOC"
+    #Only the issues that are the highest severity and the highest confidence
+    tuned: "-lll -iii -r $LOC"

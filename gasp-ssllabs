@@ -1,0 +1,27 @@
+FROM mtesauro/gasp-base:1.0.0 
+# Maintainer: matt.tesauro@owasp.org
+
+# ASPTAG = mtesauro/gasp-ssllabs:1.0.0
+
+ENV DEBIAN_FRONTEND noninteractive
+
+## Update OS and install ssllabs
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    wget
+
+## Install ssllabs-scan
+
+ARG SSLLAB=1.4.0
+
+RUN wget -qO- https://github.com/ssllabs/ssllabs-scan/releases/download/v${SSLLAB}/ssllabs-scan_${SSLLAB}-linux64.tgz | tar xvz -C /usr/bin --strip-components=1
+
+COPY tools/ssllabs/ssllabs.bash /usr/bin/
+
+RUN chmod 775 /usr/bin/ssllabs.bash
+
+########## Change to appsecpipeline user ##########
+USER appsecpipeline
+
+ENTRYPOINT ["ssllabs.bash"]
