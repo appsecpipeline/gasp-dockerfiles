@@ -1,7 +1,8 @@
 FROM mtesauro/gasp-base:1.0.0 
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-pyt:1.0.0
+# IMAGE=gasp-pyt
+# GASPVER=Alpha
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -25,7 +26,7 @@ RUN git clone https://github.com/python-security/pyt.git /tmp/pyt-clone \
 
 #RUN chmod 775 /usr/bin/pyt.bash
 
-########## Change to appsecpipeline user ##########
+## Change to appsecpipeline user 
 USER appsecpipeline
 
-ENTRYPOINT ["bandit.bash"]
+ENTRYPOINT ["pyt.bash"]

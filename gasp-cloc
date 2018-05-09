@@ -1,7 +1,8 @@
 FROM mtesauro/gasp-base:1.0.0 
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-cloc:1.0.0
+# IMAGE=gasp-cloc
+# GASPVER=1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -25,7 +26,7 @@ COPY tools/cloc/cloc.bash /usr/bin/
 
 RUN chmod 775 /usr/bin/cloc.bash
 
-########## Change to appsecpipeline user ##########
+## Change to appsecpipeline user 
 USER appsecpipeline
 
 ENTRYPOINT ["cloc.bash"]

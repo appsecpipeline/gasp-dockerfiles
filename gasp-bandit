@@ -1,7 +1,8 @@
 FROM mtesauro/gasp-base:1.0.0 
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-bandit:1.0.0
+# IMAGE=gasp-bandit
+# GASPVER=1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -11,13 +12,14 @@ RUN apt-get update \
     && apt-get install -y \
     python-pip
 
+## Install bandit
 RUN pip install -U bandit
 
 COPY tools/bandit/bandit.bash /usr/bin/
 
 RUN chmod 775 /usr/bin/bandit.bash
 
-########## Change to appsecpipeline user ##########
+## Change to appsecpipeline user 
 USER appsecpipeline
 
 ENTRYPOINT ["bandit.bash"]

@@ -1,11 +1,12 @@
 FROM ubuntu:16.04
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-base:1.0.0
+# IMAGE=gasp-base
+# GASPVER=1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
-## Update OS and install
+## Update OS and setup user + directory structure for appsecpipeline
 RUN apt-get update \
     && apt-get upgrade -y \
     && mkdir /opt/appsecpipeline \

@@ -1,7 +1,8 @@
 FROM mtesauro/gasp-base:1.0.0 
 # Maintainer: matt.tesauro@owasp.org
 
-# ASPTAG = mtesauro/gasp-nikto:1.0.0
+# IMAGE=gasp-nikto
+# GASPVER=1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -15,7 +16,7 @@ COPY tools/nikto/nikto.bash /usr/bin/
 
 RUN chmod 775 /usr/bin/nikto.bash
 
-########## Change to appsecpipeline user ##########
+## Change to appsecpipeline user 
 USER appsecpipeline
 
 ENTRYPOINT ["nikto.bash"]
