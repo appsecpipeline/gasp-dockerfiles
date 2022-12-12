@@ -8,3 +8,4 @@ docker build -f ./gasp-bandit . -t mtesauro/gasp-bandit:1.0.0
 
 docker build -f ./gasp-defectdojo . -t mtesauro/gasp-defectdojo:1.0.0
 
+These dockerfiles were created to use with [gasp-docker](https://github.com/appsecpipeline/gasp-docker)
